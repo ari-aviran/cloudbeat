@@ -42,7 +42,7 @@ func newClusterHelper(client k8s.Interface) (ClusterHelper, error) {
 }
 
 func (c *clusterHelper) ClusterId() string {
-	return c.clusterId
+	return "build-security-dev"
 }
 
 func getClusterIdFromClient(client k8s.Interface) (string, error) {

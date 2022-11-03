@@ -13,6 +13,10 @@ spec:
           env:
           - name: ES_HOST
             value: "https://elasticsearch:9200"
+          - name: AWS_ACCESS_KEY_ID
+            value: ""
+          - name: AWS_SECRET_ACCESS_KEY
+            value: ""
           - name: KIBANA_HOST
             value: "https://kibana:5601"
           - name: SSL_CERT_DIR

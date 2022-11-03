@@ -345,6 +345,7 @@ func BuildOpaBundle() error {
 	if err != nil {
 		return err
 	}
+	cspPoliciesPkgDir = "/Users/ari.aviran/dev/elastic/csp-security-policies"
 
 	return sh.Run("bin/opa", "build", "-b", cspPoliciesPkgDir+"/bundle", "-e", cspPoliciesPkgDir+"/bundle/compliance")
 }

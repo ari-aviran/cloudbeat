@@ -57,12 +57,15 @@ func (fa *factories) CreateFetcher(log *logp.Logger, name string, c *agentconfig
 		return nil, errors.New("fetcher factory could not be found")
 	}
 
+	log.Infof("parseConfigFetcher %s", name)
+
 	return factory.Create(log, c, ch)
 }
 
 func (fa *factories) ParseConfigFetchers(log *logp.Logger, cfg config.Config, ch chan fetching.ResourceInfo) ([]*ParsedFetcher, error) {
 	var arr []*ParsedFetcher
 
+	log.Infof("ARI parseConfigFetchers %d", len(cfg.Fetchers))
 	for _, fcfg := range cfg.Fetchers {
 		addCredentialsToFetcherConfiguration(log, cfg, fcfg)
 		p, err := fa.parseConfigFetcher(log, fcfg, ch)
@@ -82,6 +85,7 @@ func (fa *factories) parseConfigFetcher(log *logp.Logger, fcfg *agentconfig.C, c
 	if err != nil {
 		return nil, err
 	}
+	log.Infof("parseConfigFetcher %s", gen.Name)
 
 	f, err := fa.CreateFetcher(log, gen.Name, fcfg, ch)
 	if err != nil {
@@ -95,7 +99,7 @@ func (fa *factories) parseConfigFetcher(log *logp.Logger, fcfg *agentconfig.C, c
 // This function takes the configuration file provided by the integration the `cfg` file
 // and depending on the input type, extract the relevant credentials and add them to the fetcher config
 func addCredentialsToFetcherConfiguration(log *logp.Logger, cfg config.Config, fcfg *agentconfig.C) {
-	if cfg.Type == config.InputTypeEks {
+	if cfg.Type == config.InputTypeEks || cfg.Type == config.InputTypeAws {
 		err := fcfg.Merge(cfg.AWSConfig)
 		if err != nil {
 			log.Errorf("Failed to merge aws configuration to fetcher configuration: %v", err)

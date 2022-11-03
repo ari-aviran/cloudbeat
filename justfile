@@ -4,7 +4,7 @@ kustomizeVanillaOverlay := "deploy/kustomize/overlays/cloudbeat-vanilla"
 kustomizeEksOverlay := "deploy/kustomize/overlays/cloudbeat-eks"
 cspPoliciesPkg := "github.com/elastic/csp-security-policies"
 
-create-kind-cluster kind='kind-multi':
+create-kind-cluster kind='kind-mono':
   kind create cluster --config deploy/k8s/kind/{{kind}}.yml --wait 30s
 
 install-kind:
@@ -26,7 +26,7 @@ build-deploy-cloudbeat-debug: build-cloudbeat-debug load-cloudbeat-image deploy-
 build-replace-cloudbeat: build-binary
   ./scripts/remote_replace_cloudbeat.sh
 
-load-cloudbeat-image kind='kind-multi':
+load-cloudbeat-image kind='kind-mono':
   kind load docker-image cloudbeat:latest --name {{kind}}
 
 build-opa-bundle:
@@ -76,7 +76,7 @@ elastic-stack-up:
 elastic-stack-down:
   elastic-package stack down
 
-elastic-stack-connect-kind kind='kind-multi':
+elastic-stack-connect-kind kind='kind-mono':
   ID=$( docker ps --filter name={{kind}}-control-plane --format "{{{{.ID}}" ) && \
   docker network connect elastic-package-stack_default $ID
 
@@ -110,7 +110,7 @@ patch-cb-yml-tests:
 build-pytest-docker:
   cd tests; docker build -t {{TESTS_RELEASE}} .
 
-load-pytest-kind kind='kind-multi': build-pytest-docker
+load-pytest-kind kind='kind-mono': build-pytest-docker
   kind load docker-image {{TESTS_RELEASE}}:latest --name {{kind}}
 
 load-pytest-eks:
@@ -141,7 +141,7 @@ gen-report:
 run-tests:
   helm test {{TESTS_RELEASE}} -n {{NAMESPACE}} --logs
 
-run-tests-ci kind='kind-multi':
+run-tests-ci kind='kind-mono':
   #!/usr/bin/env bash
   helm test {{TESTS_RELEASE}} -n {{NAMESPACE}} --kube-context kind-{{kind}} --timeout {{TESTS_TIMEOUT}} --logs 2>&1 | tee test.log
   result_code=${PIPESTATUS[0]}
@@ -153,7 +153,7 @@ run-tests-ci kind='kind-multi':
 
 build-load-run-tests: build-pytest-docker load-pytest-kind run-tests
 
-delete-local-helm-cluster kind='kind-multi':
+delete-local-helm-cluster kind='kind-mono':
   kind delete cluster --name {{kind}}
 
 cleanup-create-local-helm-cluster target range='..': delete-local-helm-cluster create-kind-cluster build-cloudbeat load-cloudbeat-image
