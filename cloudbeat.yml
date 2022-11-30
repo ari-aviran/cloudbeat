@@ -13,7 +13,7 @@
 cloudbeat:
   type: cloudbeat/cis_k8s
   # Defines how often an event is sent to the output
-  period: 4h
+  period: 3h
   fetchers:
     - name: kube-api
     - name: process
