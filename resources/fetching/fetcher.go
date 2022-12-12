@@ -92,9 +92,11 @@ const (
 	ElbType        = "aws-elb"
 	RolePolicyType = "aws-role-policy"
 	EksType        = "aws-eks"
+	S3Type         = "aws-s3"
 
 	CloudIdentity          = "iam"
 	CloudContainerMgmt     = "caas" // containers as a service
 	CloudLoadBalancer      = "load-balancer"
 	CloudContainerRegistry = "container-registry"
+	CloudStorage           = "cloud-storage"
 )

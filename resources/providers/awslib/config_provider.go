@@ -33,8 +33,9 @@ func (p ConfigProvider) InitializeAWSConfig(ctx context.Context, cfg aws.ConfigA
 		return awssdk.Config{}, err
 	}
 	metadata, err := p.MetadataProvider.GetMetadata(ctx, awsConfig)
+	// TODO(Ari): Hacky
 	if err != nil {
-		return awssdk.Config{}, err
+		return awsConfig, nil
 	}
 	awsConfig.Region = metadata.Region
 

@@ -103,7 +103,7 @@ func newCloudbeat(_ *beat.Beat, cfg *agentconfig.C) (*cloudbeat, error) {
 		return nil, err
 	}
 
-	data, err := fetchersManager.NewData(log, c.Period, time.Minute, fetchersRegistry)
+	data, err := fetchersManager.NewData(log, c.Period, time.Hour, fetchersRegistry)
 	if err != nil {
 		cancel()
 		return nil, err
